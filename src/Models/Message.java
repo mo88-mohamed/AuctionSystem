@@ -6,6 +6,9 @@ public class Message implements Serializable {
     private String functionName, params;
     private Object object;
 
+    public Message() {
+    }
+
     public Message(String functionName, String params) {
         this.functionName = functionName;
         this.params = params;

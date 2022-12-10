@@ -13,70 +13,98 @@ import java.util.List;
 
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
+    private ClientHandler clientHandler;
     private ArrayList<ClientHandler> clientHandlers;
-    private Authentication authentication = new Authentication();
-    private BidsHandler bidsHandler = new BidsHandler();
-    private OutputStream outputStream = null;
-    private ObjectOutputStream objectOutputStream = null;
-    private InputStream inputStream = null;
-    private ObjectInputStream objectInputStream = null;
-    private Message message = null;
+    private OutputStream outputStream;
+    private ObjectOutputStream objectOutputStream;
+    private InputStream inputStream;
+    private ObjectInputStream objectInputStream;
+    private Authentication authentication;
+    private BidsHandler bidsHandler;
+    private Message message;
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> clientHandlers) throws IOException, ClassNotFoundException {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> clientHandlers) throws IOException {
         this.clientSocket = socket;
         this.clientHandlers = clientHandlers;
+
         outputStream = clientSocket.getOutputStream();
         objectOutputStream = new ObjectOutputStream(outputStream);
         inputStream = clientSocket.getInputStream();
         objectInputStream = new ObjectInputStream(inputStream);
-        message = (Message) objectInputStream.readObject();
+        authentication = new Authentication();
+        bidsHandler = new BidsHandler();
     }
     public void run() {
         try {
+            boolean isSocketOpen = true;
+            while (isSocketOpen) {
+                System.out.println("Server True");
+                Thread.sleep(1000);
+                try {
+                    message = (Message) objectInputStream.readObject();
+                    if (message == null)
+                        System.out.println("Nulll");
+                    else
+                        System.out.println("Not null");
+                    System.out.println("Try");
+                } catch (Exception e) {
+                    System.out.println("No messega from client");
+                    continue;
+                }
+                if (message.getFunctionName().equals("isUserExist")) {
+                    message.setObject(authentication.isUserExist(message.getParams()));
+                    objectOutputStream.writeObject(message);
+                } else if (message.getFunctionName().equals("createNewUser")) {
+                    User user = (User) message.getObject();
+                    message.setObject(authentication.createNewUser(user));
+                    objectOutputStream.writeObject(message);
+                } else if (message.getFunctionName().equals("login")) {
+                    User user = (User) message.getObject();
+                    message.setObject(authentication.logIn(user));
+                    objectOutputStream.writeObject(message);
+                } else if (message.getFunctionName().equals("createBid")) {
+                    Bid bid = (Bid) message.getObject();
+                    message.setObject(bidsHandler.createBid(bid));
+                    objectOutputStream.writeObject(message);
+                } else if (message.getFunctionName().equals("getAllBids")) {
+                    message.setObject(bidsHandler.getAllBids());
+                    objectOutputStream.writeObject(message);
+                } else if (message.getFunctionName().equals("updatePrice")) {
+                    List<String> params = Arrays.asList(message.getParams().split(","));
+                    if (bidsHandler.updatePrice(Integer.parseInt(params.get(0)),Integer.parseInt(params.get(1)),params.get(2))) {
+                        message.setObject(true);
+                        objectOutputStream.writeObject(message);
+                        System.out.println("Updated");
 
-
-            if (message.getFunctionName().equals("isUserExist"))
-                objectOutputStream.writeObject(authentication.isUserExist(message.getParams()));
-            else if (message.getFunctionName().equals("createNewUser")) {
-                User user = (User) message.getObject();
-                objectOutputStream.writeObject(authentication.createNewUser(user));
-            } else if (message.getFunctionName().equals("login")) {
-                User user = (User) message.getObject();
-                objectOutputStream.writeObject(authentication.logIn(user));
-            } else if (message.getFunctionName().equals("createBid")) {
-                Bid bid = (Bid) message.getObject();
-                objectOutputStream.writeObject(bidsHandler.createBid(bid));
-            } else if (message.getFunctionName().equals("getAllBids")) {
-                objectOutputStream.writeObject(bidsHandler.getAllBids());
-
-
-            } else if (message.getFunctionName().equals("updatePrice")) {
-                List<String> params = Arrays.asList(message.getParams().split(","));
-                if (bidsHandler.updatePrice(Integer.parseInt(params.get(0)),Integer.parseInt(params.get(1)),params.get(2))) {
-                    objectOutputStream.writeObject(true);
-                    List<Bid> bidsList = bidsHandler.getAllBids();
-                    for (Bid bid:bidsList) {
-                        System.out.println("New Client");
-                        System.out.println("id: " + bid.getId() + " price: " + bid.getPrice());
+                        List<Bid> bidsList = bidsHandler.getAllBids();
+                        message = new Message("getAllBidsLive", bidsList);
+                        for (ClientHandler clientHandler : clientHandlers) {
+                            synchronized (clientHandler.objectOutputStream) {
+                                clientHandler.objectOutputStream.writeObject(message);
+                            }
+//                            clientHandler.objectOutputStream.writeObject(message);
+                        }
+                    } else {
+                        message.setObject(false);
+                        objectOutputStream.writeObject(message);
+                        System.out.println("Not up dated");
                     }
-                    message = new Message("setAllBidsStatic", bidsList);
-                    for (ClientHandler clientHandler:clientHandlers)
-                        //clientHandler.objectOutputStream.writeObject(message);
-                        clientHandler.objectOutputStream.writeObject("I am Here Baby");
+                } else if (message.getFunctionName().equals("closeConnection")) {
+                    System.out.println("This socket will be closed");
+                    objectOutputStream.writeObject(true);
+                    clientSocket.close();
+                    objectInputStream.close();
+                    objectOutputStream.close();
+                    clientHandlers.remove(clientHandler);
+                    isSocketOpen = false;
+                    break;
                 } else
-                    objectOutputStream.writeObject(false);
+                    objectOutputStream.writeObject("Wrong Request");
             }
-//            else if (message.getFunctionName().equals("getAllBidsStatic")) {
-//                ServerHandler.num += Integer.parseInt(message.getParams());
-//                objectOutputStream.writeObject(ServerHandler.num);
-//            }
-
-            else
-                objectOutputStream.writeObject("Wrong Request");
-
-        } catch (IOException | SQLException e) {
+        } catch (IOException | SQLException | InterruptedException e) {
             System.out.println("Catch");
+            e.printStackTrace();
         } finally {
             try {
                 if (objectOutputStream != null) {
@@ -91,5 +119,9 @@ public class ClientHandler implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setClientHandler(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
     }
 }
