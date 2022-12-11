@@ -7,6 +7,7 @@ import Models.Bid;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -22,6 +23,10 @@ public class ServerHandler {
             // server is listening on port 1234
             serverSocket = new ServerSocket(12345);
             serverSocket.setReuseAddress(true);
+
+            BidsHandler bidsHandler = new BidsHandler();
+            // init the bids list from database when server runs first time
+            bidsList = bidsHandler.getAllBids();
 
             // running infinite loop for getting
             // client request
@@ -44,7 +49,7 @@ public class ServerHandler {
                 executorService.execute(clientHandler);
                 clientHandlers.add(clientHandler);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         } finally {
             if (serverSocket != null) {

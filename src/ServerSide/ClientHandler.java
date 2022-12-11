@@ -22,11 +22,13 @@ public class ClientHandler implements Runnable {
     private Authentication authentication;
     private BidsHandler bidsHandler;
     private Message message;
+    public volatile boolean isListUpdated;
 
     // Constructor
     public ClientHandler(Socket socket, ArrayList<ClientHandler> clientHandlers) throws IOException {
         this.clientSocket = socket;
         this.clientHandlers = clientHandlers;
+
 
         outputStream = clientSocket.getOutputStream();
         objectOutputStream = new ObjectOutputStream(outputStream);
@@ -75,16 +77,56 @@ public class ClientHandler implements Runnable {
                         message.setObject(true);
                         objectOutputStream.writeObject(message);
                         System.out.println("Updated");
-                        ServerHandler.bidsList = bidsHandler.getAllBids();
+                        synchronized (ServerHandler.bidsList) {
+                            ServerHandler.bidsList = bidsHandler.getAllBids();
+                        }
+                        //isListUpdated = true;
+                        for (ClientHandler clientHandler : clientHandlers) {
+                            clientHandler.isListUpdated = true;
+                        }
                     } else {
                         message.setObject(false);
                         objectOutputStream.writeObject(message);
                         System.out.println("Not up dated");
                     }
                 } else if (message.getFunctionName().equals("getAllBidsLive")) {
-                    message.setObject(ServerHandler.bidsList);
-                    objectOutputStream.writeObject(message);
-                    System.out.println("Array list is sent");
+                    if (isListUpdated) {
+                        isListUpdated = false;
+                        message.setParams("true");
+                        message.setObject(ServerHandler.bidsList);
+                        objectOutputStream.writeObject(message);
+                        System.out.println("The list is updated");
+                    } else {
+                        message.setParams("false");
+                        objectOutputStream.writeObject(message);
+                        System.out.println("Server no update");
+                    }
+
+//
+//                    List<Bid> tempList = (List<Bid>) message.getObject();
+//                    System.out.println(tempList);
+//                    System.out.println(ServerHandler.bidsList);
+//                    System.out.println("Client List");
+//                    for (Bid bid : tempList) {
+//                        System.out.println("id: " + bid.getId() + " price: " + bid.getPrice());
+//                    }
+//
+//                    System.out.println("Server List");
+//                    for (Bid bid : ServerHandler.bidsList) {
+//                        System.out.println("id: " + bid.getId() + " price: " + bid.getPrice());
+//                    }
+//
+//
+//
+//                    if (tempList.contains(ServerHandler.bidsList)) {
+//                        System.out.println("No update in the list happened");
+//                        message.setParams("false");
+//                    } else {
+//                        message.setObject(ServerHandler.bidsList);
+//                        message.setParams("true");
+//                        objectOutputStream.writeObject(message);
+//                        System.out.println("Array list is sent");
+//                    }
                 } else if (message.getFunctionName().equals("closeConnection")) {
                     System.out.println("This socket will be closed");
                     message.setObject(true);

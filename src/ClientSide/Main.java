@@ -14,8 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-    static List<Bid> bidsList = new ArrayList<>();
-
+    public static List<Bid> bidsList = new ArrayList<>();
+    public static boolean isListUpdated;
     public static void main(String[] args) throws SQLException, InterruptedException {
         try {
             // this is must be in a first line in your main program
@@ -75,7 +75,7 @@ public class Main {
 
             // updatePrice
 
-            int id = 16, price = 119000;
+            int id = 16, price = 136000;
             // winner is the current user email
             String winner = "ali@gmail.com";
             Message message4 = new Message("updatePrice", "" + id + "," + price + "," + winner);
@@ -86,18 +86,35 @@ public class Main {
             Message message6;
             List<Bid> resultList;
             while (true) {
-                Thread.sleep(1000);
+                Thread.sleep(0000);
                 message6 = new Message("getAllBidsLive");
                 message6 = (Message) ServerConnection.getInstance().sendMessage(message6);
-                resultList = (List<Bid>) message6.getObject();
-                if (resultList.size() == 0) {
-                    System.out.println("No updates");
-                } else {
+
+
+                isListUpdated = Boolean.parseBoolean(message6.getParams());
+                if (isListUpdated) {
                     System.out.println("There is an update");
                     bidsList = (List<Bid>) message6.getObject();
+                    isListUpdated = false;
                     for (Bid bid1 : bidsList)
                         System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
+                } else {
+
                 }
+
+//
+//                resultList = (List<Bid>) message6.getObject();
+//
+//
+//
+//                if (resultList.size() == 0) {
+//                    System.out.println("No updates");
+//                } else {
+//                    System.out.println("There is an update");
+//                    bidsList = (List<Bid>) message6.getObject();
+//                    for (Bid bid1 : bidsList)
+//                        System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
+//                }
 //                bidsList = (List<Bid>) message6.getObject();
 //                System.out.println("Request says size: " + bidsList.size());
 //                for (Bid bid1 : bidsList)
