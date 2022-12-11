@@ -5,6 +5,7 @@ import Models.Message;
 import Models.User;
 import ServerSide.ServerHandler;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -75,7 +76,7 @@ public class Main {
 
             // updatePrice
 
-            int id = 16, price = 136000;
+            int id = 16, price = 138000;
             // winner is the current user email
             String winner = "ali@gmail.com";
             Message message4 = new Message("updatePrice", "" + id + "," + price + "," + winner);
@@ -83,59 +84,39 @@ public class Main {
             boolean result4 = (boolean) message4.getObject();
             System.out.println("Client: " + result4);
 
-            Message message6;
-            List<Bid> resultList;
-            while (true) {
-                Thread.sleep(0000);
-                message6 = new Message("getAllBidsLive");
-                message6 = (Message) ServerConnection.getInstance().sendMessage(message6);
-
-
-                isListUpdated = Boolean.parseBoolean(message6.getParams());
-                if (isListUpdated) {
-                    System.out.println("There is an update");
-                    bidsList = (List<Bid>) message6.getObject();
-                    isListUpdated = false;
-                    for (Bid bid1 : bidsList)
-                        System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
-                } else {
-
-                }
-
-//
-//                resultList = (List<Bid>) message6.getObject();
-//
-//
-//
-//                if (resultList.size() == 0) {
-//                    System.out.println("No updates");
-//                } else {
-//                    System.out.println("There is an update");
-//                    bidsList = (List<Bid>) message6.getObject();
-//                    for (Bid bid1 : bidsList)
-//                        System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
-//                }
-//                bidsList = (List<Bid>) message6.getObject();
-//                System.out.println("Request says size: " + bidsList.size());
-//                for (Bid bid1 : bidsList)
-//                    System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
-            }
-
             // this loop must be in main in client this checks every second if there is any update in the bid list
-//            List<Bid> bidsList;
-//            while (true) {
-//                // this to notify when update happens
-//                if (ServerConnection.getInstance().getIsListUpdated()) {
-//                    bidsList = ServerConnection.getInstance().getBidsList();
-//                    ServerConnection.getInstance().setIsListUpdated(false);
-//                    if (bidsList != null) {
-//                        System.out.println("The list is updated");
-//                        for (Bid bid1 : bidsList)
-//                            System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
-//                    }
-//                }
-//            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Message message6;
+                    List<Bid> resultList;
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        message6 = new Message("getAllBidsLive");
+                        try {
+                            message6 = (Message) ServerConnection.getInstance().sendMessage(message6);
+                        } catch (IOException | ClassNotFoundException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
 
+
+                        isListUpdated = Boolean.parseBoolean(message6.getParams());
+                        if (isListUpdated) {
+                            System.out.println("There is an update");
+                            bidsList = (List<Bid>) message6.getObject();
+                            isListUpdated = false;
+                            for (Bid bid1 : bidsList)
+                                System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
+                        } else {
+
+                        }
+                    }
+                }
+            }).start();
             // close function must be called when user press on red x to close the gui and the gui mustn't be closed until this function return true
 //            Message message5 = new Message("closeConnection");
 //            message5 = (Message) ServerConnection.getInstance().sendMessage(message5);
