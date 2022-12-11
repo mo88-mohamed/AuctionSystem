@@ -40,7 +40,6 @@ public class ClientHandler implements Runnable {
             boolean isSocketOpen = true;
             while (isSocketOpen) {
                 System.out.println("Server True");
-                Thread.sleep(1000);
                 try {
                     message = (Message) objectInputStream.readObject();
                     if (message == null)
@@ -72,35 +71,34 @@ public class ClientHandler implements Runnable {
                     objectOutputStream.writeObject(message);
                 } else if (message.getFunctionName().equals("updatePrice")) {
                     List<String> params = Arrays.asList(message.getParams().split(","));
-                    if (bidsHandler.updatePrice(Integer.parseInt(params.get(0)),Integer.parseInt(params.get(1)),params.get(2))) {
+                    if (bidsHandler.updatePrice(Integer.parseInt(params.get(0)), Integer.parseInt(params.get(1)), params.get(2))) {
                         message.setObject(true);
                         objectOutputStream.writeObject(message);
                         System.out.println("Updated");
-
-                        List<Bid> bidsList = bidsHandler.getAllBids();
-                        message = new Message("getAllBidsLive", bidsList);
-                        for (ClientHandler clientHandler : clientHandlers) {
-                            synchronized (clientHandler.objectOutputStream) {
-                                clientHandler.objectOutputStream.writeObject(message);
-                            }
-//                            clientHandler.objectOutputStream.writeObject(message);
-                        }
+                        ServerHandler.bidsList = bidsHandler.getAllBids();
                     } else {
                         message.setObject(false);
                         objectOutputStream.writeObject(message);
                         System.out.println("Not up dated");
                     }
+                } else if (message.getFunctionName().equals("getAllBidsLive")) {
+                    message.setObject(ServerHandler.bidsList);
+                    objectOutputStream.writeObject(message);
+                    System.out.println("Array list is sent");
                 } else if (message.getFunctionName().equals("closeConnection")) {
                     System.out.println("This socket will be closed");
-                    objectOutputStream.writeObject(true);
+                    message.setObject(true);
+                    objectOutputStream.writeObject(message);
                     clientSocket.close();
                     objectInputStream.close();
                     objectOutputStream.close();
                     clientHandlers.remove(clientHandler);
                     isSocketOpen = false;
                     break;
-                } else
+                }
+                else
                     objectOutputStream.writeObject("Wrong Request");
+                Thread.sleep(1000);
             }
         } catch (IOException | SQLException | InterruptedException e) {
             System.out.println("Catch");

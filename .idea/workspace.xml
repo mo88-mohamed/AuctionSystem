@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9358cc5-2dcf-488f-9418-ebf6d7e2dc6e" name="Changes" comment="beta version">
-      <change afterPath="$PROJECT_DIR$/src/ServerConnection.java" afterDir="false" />
+    <list default="true" id="c9358cc5-2dcf-488f-9418-ebf6d7e2dc6e" name="Changes" comment="all working will except broad casting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientSide/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientSide/ServerConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ServerSide/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerSide/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ServerSide/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerSide/ServerHandler.java" afterDir="false" />
     </list>
@@ -20,6 +19,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -57,7 +57,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Abdallah/Projects/Java/ClientServerApp&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Abdallah/Projects/Java/Auction System&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -79,16 +79,16 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ServerHandler">
+  <component name="RunManager" selected="Application.Main1">
     <configuration name="Main1" type="Application" factoryName="Application" singleton="false">
-      <option name="MAIN_CLASS_NAME" value="Main" />
+      <option name="MAIN_CLASS_NAME" value="ClientSide.Main" />
       <module name="Auction System" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="Main2" type="Application" factoryName="Application" singleton="false">
-      <option name="MAIN_CLASS_NAME" value="Main" />
+      <option name="MAIN_CLASS_NAME" value="ClientSide.Main" />
       <module name="Auction System" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -102,14 +102,14 @@
       </method>
     </configuration>
     <configuration name="Main3" type="Application" factoryName="Application" singleton="false">
-      <option name="MAIN_CLASS_NAME" value="Main" />
+      <option name="MAIN_CLASS_NAME" value="ClientSide.Main" />
       <module name="Auction System" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="Main4" type="Application" factoryName="Application" singleton="false">
-      <option name="MAIN_CLASS_NAME" value="Main" />
+      <option name="MAIN_CLASS_NAME" value="ClientSide.Main" />
       <module name="Auction System" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -120,7 +120,7 @@
       <module name="Auction System" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ServerSide.*" />
+          <option name="PATTERN" value=".*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -151,6 +151,8 @@
       <workItem from="1670457790761" duration="19087000" />
       <workItem from="1670519996071" duration="40241000" />
       <workItem from="1670685079094" duration="18081000" />
+      <workItem from="1670708831954" duration="17896000" />
+      <workItem from="1670765452480" duration="1332000" />
     </task>
     <task id="LOCAL-00001" summary="beta version">
       <created>1670471664657</created>
@@ -159,7 +161,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670471664657</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="all working will except broad casting">
+      <created>1670708930175</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1670708930175</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,7 +176,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="beta version" />
-    <option name="LAST_COMMIT_MESSAGE" value="beta version" />
+    <MESSAGE value="all working will except broad casting" />
+    <option name="LAST_COMMIT_MESSAGE" value="all working will except broad casting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -1,17 +1,21 @@
+package ClientSide;
+
 import Models.Bid;
 import Models.Message;
 import Models.User;
+import ServerSide.ServerHandler;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-    private static List<Bid> bidsList;
-    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    static List<Bid> bidsList = new ArrayList<>();
+
     public static void main(String[] args) throws SQLException, InterruptedException {
         try {
             // this is must be in a first line in your main program
@@ -71,7 +75,7 @@ public class Main {
 
             // updatePrice
 
-            int id = 16, price = 67000;
+            int id = 16, price = 119000;
             // winner is the current user email
             String winner = "ali@gmail.com";
             Message message4 = new Message("updatePrice", "" + id + "," + price + "," + winner);
@@ -79,32 +83,50 @@ public class Main {
             boolean result4 = (boolean) message4.getObject();
             System.out.println("Client: " + result4);
 
+            Message message6;
+            List<Bid> resultList;
+            while (true) {
+                Thread.sleep(1000);
+                message6 = new Message("getAllBidsLive");
+                message6 = (Message) ServerConnection.getInstance().sendMessage(message6);
+                resultList = (List<Bid>) message6.getObject();
+                if (resultList.size() == 0) {
+                    System.out.println("No updates");
+                } else {
+                    System.out.println("There is an update");
+                    bidsList = (List<Bid>) message6.getObject();
+                    for (Bid bid1 : bidsList)
+                        System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
+                }
+//                bidsList = (List<Bid>) message6.getObject();
+//                System.out.println("Request says size: " + bidsList.size());
+//                for (Bid bid1 : bidsList)
+//                    System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
+            }
 
             // this loop must be in main in client this checks every second if there is any update in the bid list
-
-            while (true) {
-                // this to notify when update happens
-                if (ServerConnection.getInstance().getIsListUpdated()) {
-                    bidsList = ServerConnection.getInstance().getBidsList();
-                    ServerConnection.getInstance().setIsListUpdated(false);
-                    if (bidsList != null) {
-                        System.out.println("The list is updated");
-                        for (Bid bid1 : bidsList)
-                            System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
-                    }
-                }
-            }
-
+//            List<Bid> bidsList;
+//            while (true) {
+//                // this to notify when update happens
+//                if (ServerConnection.getInstance().getIsListUpdated()) {
+//                    bidsList = ServerConnection.getInstance().getBidsList();
+//                    ServerConnection.getInstance().setIsListUpdated(false);
+//                    if (bidsList != null) {
+//                        System.out.println("The list is updated");
+//                        for (Bid bid1 : bidsList)
+//                            System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
+//                    }
+//                }
+//            }
 
             // close function must be called when user press on red x to close the gui and the gui mustn't be closed until this function return true
-            /*
-            Message message = new Message("closeConnection");
-            boolean result = (boolean) ServerConnection.getInstance().sendMessage(message);
-            if (result) {
-                System.out.println("Client closed: " + result);
-                System.exit(0);
-            }
-             */
+//            Message message5 = new Message("closeConnection");
+//            message5 = (Message) ServerConnection.getInstance().sendMessage(message5);
+//            boolean result5 = (boolean) message5.getObject();
+//            if (result5) {
+//                System.out.println("Client closed: " + result5);
+//                System.exit(0);
+//            }
         }
         catch (Exception e) {
             e.printStackTrace();

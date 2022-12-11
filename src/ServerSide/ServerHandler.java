@@ -1,23 +1,20 @@
 package ServerSide;
 
+;
+
 import Models.Bid;
-import Models.Message;
-import Models.User;
 
 import java.io.*;
-import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerHandler {
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
+    public static volatile List<Bid> bidsList = new ArrayList<>();
     private static ExecutorService executorService = Executors.newCachedThreadPool();
     public static void main(String[] args) throws ClassNotFoundException, IOException {
         ServerSocket serverSocket = null;
