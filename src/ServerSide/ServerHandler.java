@@ -2,7 +2,6 @@ package ServerSide;
 
 ;
 
-import ClientSide.BidsHandler;
 import Models.Bid;
 
 import java.io.*;
