@@ -1,6 +1,7 @@
 package view;
 
 import Helper.Img;
+import Models.Bid;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,6 +21,8 @@ public class Card extends JPanel {
 
     public JLabel price;
 
+    int priceStr;
+
     private String imgPath;
 //    Card(){
 //        this.card=new JPanel();
@@ -27,13 +30,15 @@ public class Card extends JPanel {
 //        this.itemName= new JLabel();
 //        initializeGui();
 //    }
-    Card(String imgPath,String itemName,int price,Window parent){
+    //Card(String imgPath,String itemName,int price,Window parent){
+    Card(Bid bid, Window parent){
 
         this.parent=parent;
         initializeGui();
-        setImg(imgPath);
-        setItemName(itemName);
-        setPrice(price);
+        setImg(bid.getImage_path());
+//        System.out.println("imgPath: "+imgPath);
+        setItemName(bid.getTitle());
+        setPrice(bid.getPrice());
 
 
         this.addMouseListener(new MouseAdapter() {
@@ -50,10 +55,7 @@ public class Card extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 //                System.out.println("hello");
-                Product product=new Product(itemName,500,500,JFrame.EXIT_ON_CLOSE);
-                product.setProductImage(imgPath);
-                product.setProductName(itemName);
-                product.setCurrentProductPrice(String.valueOf(price));
+                Product product=new Product(bid,500,500,JFrame.EXIT_ON_CLOSE);
                 parent.dispose();
             }
         });
@@ -103,6 +105,7 @@ public class Card extends JPanel {
     }
 
     public void setPrice(int price) {
+        System.out.println("Name: " + itemName.getText() + " newPrice: " + price);
         this.price.setText(String.valueOf(price)+" $");
     }
 

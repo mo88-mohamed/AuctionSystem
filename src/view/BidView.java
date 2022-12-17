@@ -1,6 +1,9 @@
 package view;
 
+import ClientSide.ServerConnection;
 import Helper.Img;
+import Models.Bid;
+import Models.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +12,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class Bid extends Window {
+public class BidView extends Window {
     private JPanel root;
     private JLabel image;
     private JTextField productName;
@@ -22,7 +27,7 @@ public class Bid extends Window {
     private String imagePath;
     JFileChooser chooser;
 
-    Bid(String windowTitle, int width, int height, int defaultCloseOperation) {
+    BidView(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
 
         initializeGui();
@@ -45,15 +50,32 @@ public class Bid extends Window {
             public void actionPerformed(ActionEvent e) {
                 //submiting click
 
+                // createBid
 
-                Route.Home();
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
+                LocalDateTime localDateTime = LocalDateTime.now();
+                String now = dateTimeFormatter.format(localDateTime);
+                Bid bid = new Bid(getMinPrice(),getAuctionTime(),getProductName(),getDescription(),getProductImage(),now,Login.CurrentUserEmail);
+                Message message3 = new Message("createBid", bid);
+
+                try{
+                    message3 = (Message) ServerConnection.getInstance().sendMessage(message3);
+                }catch (Exception ignored){
+                }
+
+                if (message3.getFunctionName().equals("createBid")){
+                    boolean result3 = (boolean) message3.getObject();
+                    System.out.println("Client: " + result3);
+                    Route.auctionHall();
+                }
+
                 dispose();
             }
         });
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Route.Home();
+                Route.auctionHall();
                 dispose();
             }
         });
@@ -64,7 +86,7 @@ public class Bid extends Window {
     private void initializeGui(){
         chooser =new JFileChooser();
 
-        setProductImage("..\\Auction System\\src\\view\\upload.png");
+        setProductImage(".\\src\\view\\upload.png");
         ContentPanel.add(root);
         StyleComponents(root);
         description.setLineWrap(true);
@@ -77,8 +99,10 @@ public class Bid extends Window {
         image.setSize(new Dimension(150,150));
         this.imagePath=imgPath;
         image.setIcon(Img.createImageIcon( Img.readImage(imgPath,new Dimension(image.getWidth(),image.getHeight()))));
+    }
 
-
+    public String getProductImage() {
+        return imagePath;
     }
     public int getMinPrice(){
         return Integer.parseInt(minPrice.getText());
@@ -86,7 +110,7 @@ public class Bid extends Window {
     public String getProductName(){
         return productName.getText();
     }
-    public long getAuctionTime(){
+    public int getAuctionTime(){
         return Integer.parseInt(hours.getSelectedItem().toString())*60*60*1000;
     }
     public String getDescription(){

@@ -40,7 +40,8 @@ public class Countdown {
     }
 
     public void calculateLeftTime() {
-        this.timeLeft = endTime-startTime;
+//        this.timeLeft = endTime-startTime;
+        this.timeLeft = endTime - System.currentTimeMillis();
     }
 
     public void setEndTime(long endTime) {

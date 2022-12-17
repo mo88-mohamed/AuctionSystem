@@ -10,7 +10,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="11bf" class="javax.swing.JTextField" binding="username">
+      <component id="11bf" class="javax.swing.JTextField" binding="email">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -33,7 +33,7 @@
         <properties>
           <background color="-1"/>
           <foreground color="-1"/>
-          <text value="username"/>
+          <text value="email"/>
         </properties>
       </component>
       <component id="63ade" class="javax.swing.JLabel">
