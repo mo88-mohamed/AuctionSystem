@@ -27,7 +27,7 @@ public class Route {
         Login login=new Login("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
     }
     public static  void register(){
-        Register register =new Register("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
+        Register register =new Register("Auction System",310, 150, JFrame.DISPOSE_ON_CLOSE);
 
     }
 }

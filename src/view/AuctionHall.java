@@ -36,6 +36,14 @@ public class AuctionHall extends Window {
                 dispose();
             }
         });
+        logOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Route.login();
+                dispose();
+            }
+        });
     }
 
 

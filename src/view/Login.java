@@ -12,7 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Login extends Window{
-    public static String CurrentUserEmail = "";
+    public static String CurrentUserEmail ;
 
     private JPanel pn;
     private JTextField email;
@@ -22,7 +22,7 @@ public class Login extends Window{
 
     public Login(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
-
+        CurrentUserEmail="";
         initializeGui();
 
 
@@ -43,13 +43,13 @@ public class Login extends Window{
             }catch (Exception ignored){
 
             }
-            boolean result1 = false;
+            boolean isLogin = false;
             if (message1.getFunctionName().equals("login")){
-                result1 = (boolean) message1.getObject();
-                System.out.println("Client: " + result1);
+                isLogin = (boolean) message1.getObject();
+                System.out.println("Client: " + isLogin);
             }
 
-            if(result1) { //Login success
+            if(isLogin) { //Login success
                 CurrentUserEmail = getEmail();
                 Route.auctionHall();
 //                AuctionHall auctionHall = new AuctionHall("Auction System", 500, 500, JFrame.EXIT_ON_CLOSE);
@@ -69,7 +69,7 @@ public class Login extends Window{
             public void mouseClicked(MouseEvent e) {
 //                Register register =new Register("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
                 Route.register();
-                dispose();
+//                dispose();
             }
         });
     }

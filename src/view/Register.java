@@ -18,41 +18,53 @@ public class Register extends  Window{
     Register(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
 
-        initializeFrame();
+        initializeGui();
 
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            // createNewUser
+                // createNewUser
+                if (!checkInputsEmpty()) {
 
-            User user1 = new User(getEmail(), getFullname(),getPassword());
-            Message message2 = new Message("createNewUser", user1);
-                try {
-                    message2 = (Message) ServerConnection.getInstance().sendMessage(message2);
-                } catch (Exception ignored) {
-                }
-                if (message2.getFunctionName().equals("createNewUser")) {
-                    boolean result2 = (boolean) message2.getObject();
-                    System.out.println("Client: " + result2);
 
-                    if (result2){
-                        dispose();
-                        Login login = new Login("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
-                    } else {
-                        registerError();
+                    User user1 = new User(getEmail(), getFullname(), getPassword());
+                    Message message2 = new Message("createNewUser", user1);
+                    try {
+                        message2 = (Message) ServerConnection.getInstance().sendMessage(message2);
+                    } catch (Exception ignored) {
                     }
-                }
+                    if (message2.getFunctionName().equals("createNewUser")) {
+                        boolean isRegistered = (boolean) message2.getObject();
+                        System.out.println("Client: " + isRegistered);
 
+                        if (isRegistered) {
+                            dispose();
+//                        Login login = new Login("Auction System",310, 150, JFrame.DISPOSE_ON_CLOSE);
+                        } else {
+                            registerError();
+                        }
+                    }
+
+                }
+                else{
+                    emptyFieldsError();
+                }
             }
+
         });
 
     }
 
-    void initializeFrame(){
+    void initializeGui(){
         ContentPanel.add(panel1);
         StyleComponents(panel1);
         this.setVisible(true);
+
+    }
+    private boolean checkInputsEmpty(){
+        return (getEmail().isBlank()||getFullname().isBlank()||getPassword().isBlank());
+
 
     }
 
@@ -86,6 +98,10 @@ public class Register extends  Window{
             JOptionPane.showMessageDialog(null,"Error creating account");
         }
 
+
+    }
+    private void emptyFieldsError(){
+        JOptionPane.showMessageDialog(null,"fill all fields ");
 
     }
 

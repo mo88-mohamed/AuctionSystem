@@ -1,6 +1,7 @@
 package view;
 
 import ClientSide.ServerConnection;
+import Database.Database;
 import Helper.Countdown;
 import Helper.Img;
 import Models.Bid;
@@ -10,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +31,7 @@ public class Product extends Window {
     private Timer timer;
     Product(Bid bid, int width, int height, int defaultCloseOperation) {
         super(bid.getTitle(), width, height, defaultCloseOperation);
-
+        // TODO: make function get Bid with id
         setProductImage(bid.getImage_path());
         setProductName(bid.getTitle());
         setCurrentProductPrice(String.valueOf(bid.getPrice()));
@@ -127,9 +129,9 @@ public class Product extends Window {
     public void setWinner(String winner){
         this.winner.setText("winner is "+winner);
     }
-    public void setCountdown(String text){
-        this.countdown.setText(text);
-    }
+//    public void setCountdown(String text){
+//        this.countdown.setText(text);
+//    }
     public void setDescription(String text){
         this.description.setText(text);
     }
