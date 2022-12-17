@@ -1,5 +1,7 @@
 package ServerSide;
 
+import ClientSide.Authentication;
+import ClientSide.BidsHandler;
 import Models.Bid;
 import Models.Message;
 import Models.User;

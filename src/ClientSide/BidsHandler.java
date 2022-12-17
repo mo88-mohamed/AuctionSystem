@@ -1,4 +1,4 @@
-package ServerSide;
+package ClientSide;
 
 import Database.Database;
 import Models.Bid;
