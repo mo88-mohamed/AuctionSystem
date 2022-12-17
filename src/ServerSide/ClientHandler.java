@@ -66,8 +66,20 @@ public class ClientHandler implements Runnable {
                     objectOutputStream.writeObject(message);
                 } else if (message.getFunctionName().equals("createBid")) {
                     Bid bid = (Bid) message.getObject();
-                    message.setObject(bidsHandler.createBid(bid));
-                    objectOutputStream.writeObject(message);
+                    if (bidsHandler.createBid(bid)) {
+                        message.setObject(true);
+                        objectOutputStream.writeObject(message);
+                        synchronized (ServerHandler.bidsList) {
+                            ServerHandler.bidsList = bidsHandler.getAllBids();
+                        }
+                        //isListUpdated = true;
+                        for (ClientHandler clientHandler : clientHandlers) {
+                            clientHandler.isListUpdated = true;
+                        }
+                    } else {
+                        message.setObject(false);
+                        objectOutputStream.writeObject(message);
+                    }
                 } else if (message.getFunctionName().equals("getAllBids")) {
                     message.setObject(bidsHandler.getAllBids());
                     objectOutputStream.writeObject(message);

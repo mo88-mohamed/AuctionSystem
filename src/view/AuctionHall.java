@@ -16,7 +16,7 @@ import static ServerSide.ServerHandler.bidsList;
 import static javax.swing.BorderFactory.createEmptyBorder;
 
 public class AuctionHall extends Window {
-
+    public static AuctionHall Instance;
     private JPanel cards;
     private JPanel panel1;
     private JPanel root;
@@ -25,6 +25,7 @@ public class AuctionHall extends Window {
     AuctionHall(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
 
+        Instance = this;
         initializeGui();
 
 //        click();
@@ -94,6 +95,7 @@ public class AuctionHall extends Window {
             for (Bid bid1 : Main.bidsList) {
                 Card card = new Card(bid1, this);
                 cards.add(card);
+                System.out.println(bid1.getId());
             }
         }
 //        isListUpdated = false;

@@ -4,6 +4,7 @@ import Models.Bid;
 import Models.Message;
 import Models.User;
 import ServerSide.ServerHandler;
+import view.AuctionHall;
 import view.Login;
 import view.Route;
 
@@ -24,6 +25,8 @@ public class Main {
         try {
             // this is must be in a first line in your main program
             ServerConnection.getInstance().startSession();
+
+            bidsList = ServerConnection.getInstance().getBidsList();
 
             Route.login();
 //            Login login = new Login("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
@@ -92,9 +95,6 @@ public class Main {
 //            System.out.println("Client: " + result4);
 
 
-            bidsList = ServerConnection.getInstance().getBidsList();
-
-
             // this loop must be in main in client this checks every second if there is any update in the bid list
             new Thread(new Runnable() {
                 @Override
@@ -121,6 +121,9 @@ public class Main {
                             bidsList = (List<Bid>) message6.getObject();
                             System.out.println("bidslist: " + bidsList);
                             isListUpdated = false;
+
+                            AuctionHall.Instance.addCards();
+
                             for (Bid bid1 : bidsList)
                                 System.out.println("id: " + bid1.getId() + " price: " + bid1.getPrice());
                         } else {

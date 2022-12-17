@@ -19,7 +19,7 @@ public class BidView extends Window {
     private JPanel root;
     private JLabel image;
     private JTextField productName;
-    private JTextField minPrice;
+    private JTextField price;
     private JComboBox hours;
     private JButton submit;
     private JTextArea description;
@@ -31,41 +31,45 @@ public class BidView extends Window {
         super(windowTitle, width, height, defaultCloseOperation);
 
         initializeGui();
-//        mouse();
-//        submitClick();
+
         image.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int x = chooser.showOpenDialog(null);
-                if (x == JFileChooser.APPROVE_OPTION) {
+                int fileBrowserOutput = chooser.showOpenDialog(null);
+                if (fileBrowserOutput == JFileChooser.APPROVE_OPTION) {
                     File f = chooser.getSelectedFile();
-
                     setProductImage(f.getAbsolutePath());
-
                 }
             }
         });
+
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //submiting click
+                // On creating bid button click
 
-                // createBid
+                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
+                String currentDateTime = dateFormat.format(LocalDateTime.now());
 
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
-                LocalDateTime localDateTime = LocalDateTime.now();
-                String now = dateTimeFormatter.format(localDateTime);
-                Bid bid = new Bid(getMinPrice(),getAuctionTime(),getProductName(),getDescription(),getProductImage(),now,Login.CurrentUserEmail);
+                if (!checkValidProductName()){
+                    emptyProductNameError();
+                    return;
+                }
+
+                if (!checkValidPrice()){
+                    priceFormatError();
+                    return;
+                }
+
+                Bid bid = new Bid(getPrice(),getAuctionTime(),getProductName(),getDescription(),getProductImage(),currentDateTime,Login.CurrentUserEmail);
                 Message message3 = new Message("createBid", bid);
 
                 try{
                     message3 = (Message) ServerConnection.getInstance().sendMessage(message3);
-                }catch (Exception ignored){
+                } catch (Exception ignored){
                 }
 
                 if (message3.getFunctionName().equals("createBid")){
-                    boolean result3 = (boolean) message3.getObject();
-                    System.out.println("Client: " + result3);
                     Route.auctionHall();
                 }
 
@@ -104,8 +108,8 @@ public class BidView extends Window {
     public String getProductImage() {
         return imagePath;
     }
-    public int getMinPrice(){
-        return Integer.parseInt(minPrice.getText());
+    public int getPrice(){
+        return Integer.parseInt(price.getText());
     }
     public String getProductName(){
         return productName.getText();
@@ -117,31 +121,25 @@ public class BidView extends Window {
         return description.getText();
     }
 
-//    public void mouse(){
-//        image.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                int x = chooser.showOpenDialog(null);
-//                if (x == JFileChooser.APPROVE_OPTION) {
-//                    File f = chooser.getSelectedFile();
-//
-//                    setProductImage(f.getAbsolutePath());
-//
-//                }
-//            }
-//        });
-//    }
-//    public void submitClick(){
-//        submit.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//            //submiting click
-//
-//
-//                Route.Home();
-//                dispose();
-//            }
-//        });
-//    }
+    private boolean checkValidProductName(){
+        return !getProductName().equals("");
+    }
+
+    private boolean checkValidPrice(){
+        try{
+            getPrice();
+            return true;
+        } catch (Exception exception){
+            return false;
+        }
+    }
+
+    private void priceFormatError(){
+        JOptionPane.showMessageDialog(null,"Price must be a number");
+    }
+
+    private void emptyProductNameError(){
+        JOptionPane.showMessageDialog(null,"Product name is required");
+    }
 
 }

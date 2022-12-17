@@ -46,6 +46,7 @@ public class Register extends  Window{
 
             }
         });
+
     }
 
     void initializeFrame(){

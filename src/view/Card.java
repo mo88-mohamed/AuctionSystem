@@ -41,6 +41,7 @@ public class Card extends JPanel {
         setPrice(bid.getPrice());
 
 
+
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -80,7 +81,7 @@ public class Card extends JPanel {
         this.add(price);
 
 
-
+        setBackground(new Color(0x2C2F33));
         img.setSize(new Dimension(150,100));
         itemName.setForeground(Color.white);
         price.setForeground(Color.gray);
