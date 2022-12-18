@@ -12,63 +12,39 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Login extends Window{
-    public static String CurrentUserEmail ;
+    public static String CurrentUserEmail = "";
 
-    private JPanel pn;
+    private JPanel root;
     private JTextField email;
     private JPasswordField password;
-    private JButton login;
+    private JButton loginBtn;
     private JLabel register;
 
     public Login(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
-        CurrentUserEmail="";
         initializeGui();
 
-
-
-
-        login.addActionListener(new ActionListener() {
+        loginBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                LoginModel.setUsername( username.getText());
-//                LoginModel.setPassword(String.valueOf(password.getPassword()));
+                // login
+                User user = CreateUser(getEmail(), getPassword());
 
-            // login
-
-            User user = new User(getEmail(), getPassword());
-            Message message1 = new Message("login", user);
-            try{
-                message1 = (Message) ServerConnection.getInstance().sendMessage(message1);
-            }catch (Exception ignored){
-
-            }
-            boolean isLogin = false;
-            if (message1.getFunctionName().equals("login")){
-                isLogin = (boolean) message1.getObject();
-                System.out.println("Client: " + isLogin);
-            }
-
-            if(isLogin) { //Login success
-                CurrentUserEmail = getEmail();
-                Route.auctionHall();
-//                AuctionHall auctionHall = new AuctionHall("Auction System", 500, 500, JFrame.EXIT_ON_CLOSE);
-
-
-                dispose();
-
-            }
-            else{
-                loginError();
-            }
-
+                if(login(user)) { //Login success
+                    CurrentUserEmail = getEmail();
+                    Route.auctionHallWindow();
+                    dispose();
+                }
+                else{
+                    loginError();
+                }
             }
         });
         register.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 //                Register register =new Register("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
-                Route.register();
+                Route.registerWindow();
 //                dispose();
             }
         });
@@ -77,10 +53,31 @@ public class Login extends Window{
 
 
     private void initializeGui(){
-        ContentPanel.add(pn);
-        StyleComponents(pn);
+        ContentPanel.add(root);
+        StyleComponents(root);
         register.setForeground(Color.blue);
         this.setVisible(true);
+    }
+
+    private User CreateUser(String email, String password){
+        return new User(getEmail(), getPassword());
+    }
+
+    private boolean login(User user){
+        boolean isLogin = false;
+
+        Message message = new Message("login", user);
+
+        try{
+            message = (Message) ServerConnection.getInstance().sendMessage(message);
+        }catch (Exception ignored){
+        }
+
+        if (message.getFunctionName().equals("login")){
+            isLogin = (boolean) message.getObject(); // Get login status
+        }
+
+        return isLogin;
     }
 
     private String getEmail(){
@@ -92,11 +89,6 @@ public class Login extends Window{
     }
 
     private void loginError(){
-
         JOptionPane.showMessageDialog(null,"username or password wrong");
-
     }
-
-
-
 }

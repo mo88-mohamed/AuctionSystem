@@ -12,7 +12,7 @@ public class Window extends JFrame implements ActionListener, MouseListener {
 
     private JButton closeWindow;
     private JButton minimizeWindow;
-    private JLabel title;
+    private JLabel titlebarText;
     private Color dark = new Color(0x2C2F33);
     private Color light = new Color(0x3b3f44);
     private Color veryDark = new Color(0x23272A);
@@ -20,37 +20,33 @@ public class Window extends JFrame implements ActionListener, MouseListener {
     private String windowTitle;
 
     Window(String windowTitle, int width, int height, int defaultCloseOperation){
+        initWindow(windowTitle, width, height, defaultCloseOperation);
+
+        styleContentPanel();
+
+        createWindowTitlebar();
+
+        addPanelsToWindow();
+    }
+
+    private void addPanelsToWindow() {
+        add(TitlebarPanel, BorderLayout.NORTH);
+        add(ContentPanel, BorderLayout.CENTER);
+    }
+
+    private void initWindow(String windowTitle, int width, int height, int defaultCloseOperation){
         this.windowTitle=windowTitle;
         this.width=width;
         this.height=height;
 
-        styleWindow();
-
-        setDefaultCloseOperation(defaultCloseOperation);
-//        setLocationRelativeTo(null);
+        setSize(width + 10, height + 37);
         centerWindowOnScreen();
 
-
-
-
-        styleContentPanel();
-        createCloseButton();
-        createMinimizeButton();
-//        createWindowTitle();
-        createWindowTopbar();
-
-
-
-        add(TitlebarPanel, BorderLayout.NORTH);
-        add(ContentPanel, BorderLayout.CENTER);
-    }
-    private void styleWindow(){
-        setSize(width + 10, height + 37);
-        setUndecorated(true);//  ?
+        setUndecorated(true);
         setLayout(new BorderLayout());
-
+        setDefaultCloseOperation(defaultCloseOperation);
     }
-    private  void createCloseButton(){
+    private void createCloseButton(){
         closeWindow = new JButton("X");
         closeWindow.setFocusable(false);
         closeWindow.setBackground(null);
@@ -74,33 +70,22 @@ public class Window extends JFrame implements ActionListener, MouseListener {
         ContentPanel.setLayout(new GridLayout(0, 1, 10, 10));
     }
 
-    private void styleTitle(JLabel title){
-        title.setForeground(Color.WHITE);
-        title.setBorder(new EmptyBorder(0,10,0,0));
-    }
-
-    private JLabel createWindowTitle(){
-//        JPanel titlePanel = new JPanel();
-         title = new JLabel(windowTitle);
-//        title.setForeground(Color.WHITE);
-          styleTitle(title);
-//        titlePanel.add(title);
-//        titlePanel.setBackground(veryDark);
-//        title.setAlignmentX(-10000);
-//        title.setBorder(new EmptyBorder(0,10,0,0));
-      return title;
-    }
-    private void createWindowTopbar(){
+    private void createWindowTitlebar(){
+        titlebarText = new JLabel(windowTitle);
+        titlebarText.setForeground(Color.WHITE);
+        titlebarText.setBorder(new EmptyBorder(0,10,0,0));
 
         TitlebarPanel.setBackground(veryDark);
         TitlebarPanel.setLayout(new BorderLayout());
-        TitlebarPanel.add(createWindowTitle(), BorderLayout.WEST);
-        TitlebarPanel.add(createWindowControlpanel(), BorderLayout.EAST);
-
+        TitlebarPanel.add(titlebarText, BorderLayout.WEST);
+        TitlebarPanel.add(createWindowControlsPanel(), BorderLayout.EAST);
     }
 
-    private JPanel createWindowControlpanel(){
+    private JPanel createWindowControlsPanel(){
         JPanel windowControlsPanel = new JPanel();
+
+        createMinimizeButton();
+        createCloseButton();
 
         windowControlsPanel.add(minimizeWindow);
         windowControlsPanel.add(closeWindow);
@@ -109,21 +94,9 @@ public class Window extends JFrame implements ActionListener, MouseListener {
         return windowControlsPanel;
     }
 
-
-//    private void styleTitlebarPanel(){
-//        TitlebarPanel.setBackground(veryDark);
-//        TitlebarPanel.setLayout(new BorderLayout());
-//
-//    }
-//    private void styleTitle(JLabel tilt){
-//
-//    }
-
-
     public void centerWindowOnScreen(){
         setLocationRelativeTo(null);
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {

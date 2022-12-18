@@ -1,104 +1,92 @@
 package view;
 
 import ClientSide.Main;
-import ClientSide.ServerConnection;
 import Models.Bid;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-//import Models.Bid;
 
-import static ClientSide.Main.isListUpdated;
-import static ServerSide.ServerHandler.bidsList;
 import static javax.swing.BorderFactory.createEmptyBorder;
 
 public class AuctionHall extends Window {
     public static AuctionHall Instance;
-    private JPanel cards;
+
+    private JPanel cards = new JPanel();
     private JPanel panel1;
-    private JPanel root;
-    private JButton makeBid;
-    private JButton logOut;
+    private JPanel root = new JPanel();
+    private JButton addProductBtn;
+    private JButton logOutBtn;
+
     AuctionHall(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
 
         Instance = this;
+
+        addCards();
         initializeGui();
 
-//        click();
-        makeBid.addActionListener(new ActionListener() {
+        addProductBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BidView bidView =new BidView("test",500,500,JFrame.EXIT_ON_CLOSE);
+                Route.addProductWindow();
                 dispose();
             }
         });
-        logOut.addActionListener(new ActionListener() {
+        logOutBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                Route.login();
+                Route.loginWindow();
                 dispose();
             }
         });
     }
 
-
-
     private void initializeGui(){
-        root=new JPanel();
-        root.setLayout(new BoxLayout(root,BoxLayout.PAGE_AXIS));
         JPanel top=new JPanel();
-        cards=new JPanel();
-        makeBid =new JButton("Make a Bid");
-        logOut=new JButton("log out");
-        top.add(makeBid);
-        top.add(logOut);
+
+        root.setLayout(new BoxLayout(root,BoxLayout.PAGE_AXIS));
+
+        addProductBtn =new JButton("Make a Bid");
+        logOutBtn =new JButton("log out");
+
+        top.add(addProductBtn);
+        top.add(logOutBtn);
         root.add(top);
+
         StyleComponents(top);
-        makeBid.setHorizontalAlignment(SwingConstants.LEFT);
-        makeBid.setVerticalAlignment(SwingConstants.TOP);
-        makeBid.setMaximumSize(new Dimension(20,20));
-        //
-//        ContentPanel.add(makeBid);
-//        cards.add(makeBid);
 
-        Dimension d=new Dimension();
-        d.width=-1;
-        d.height=1000;
-        cards.setPreferredSize(d);
+        addProductBtn.setHorizontalAlignment(SwingConstants.LEFT);
+        addProductBtn.setVerticalAlignment(SwingConstants.TOP);
+        addProductBtn.setMaximumSize(new Dimension(20,20));
 
-        do {
-            addCards();
-            isListUpdated = false;
-        }
-        while(isListUpdated);
+        cards.setLayout(new GridLayout(0, 3, 10, 10));
 
         JScrollPane scrollPane = new JScrollPane(cards);
-
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(createEmptyBorder());
+
         root.add(scrollPane);
         ContentPanel.add(root);
         StyleComponents(root);
         StyleComponents(cards);
         this.setVisible(true);
     }
-    public void addCards() {
-        // getAllBids
-        // call this function in the main to init the static bidsList from the database
-        System.out.println("add cards");
+
+
+
+    public void redrawCards() {
+        clearCards();
+        addCards();
+    }
+
+    private void clearCards(){
         cards.removeAll();
         cards.updateUI();
-//        try {
-//            Main.bidsList = ServerConnection.getInstance().getBidsList();
-//        } catch (Exception ignored) {
-//            System.out.println("error");
-//        }
-//        System.out.println("bidslist: " + Main.bidsList);
+    }
+
+    private void addCards(){
         if (Main.bidsList != null) {
             for (Bid bid1 : Main.bidsList) {
                 Card card = new Card(bid1, this);
@@ -106,21 +94,5 @@ public class AuctionHall extends Window {
                 System.out.println(bid1.getId());
             }
         }
-//        isListUpdated = false;
-//        for (int i=0;i<10;i++){
-//            Card card=new Card(".\\src\\view\\hp.png","headphone",100,this);
-//            cards.add(card);
-//        }
     }
-
-
-//    public void click() {
-//         makeBid.addActionListener(new ActionListener() {
-//             @Override
-//             public void actionPerformed(ActionEvent e) {
-//               Bid bid=new Bid("test",500,500,JFrame.EXIT_ON_CLOSE);
-//               dispose();
-//             }
-//         });
-//    }
 }

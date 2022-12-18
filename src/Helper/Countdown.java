@@ -44,6 +44,10 @@ public class Countdown {
         this.timeLeft = endTime - System.currentTimeMillis();
     }
 
+    public long getTimeLeft(){
+        return this.timeLeft;
+    }
+
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }

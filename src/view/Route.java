@@ -5,29 +5,19 @@ import javax.swing.*;
 public class Route {
     Route(){}
 
-
-
-
-    public static void auctionHall(){
+    public static void auctionHallWindow(){
         AuctionHall auctionHall =new AuctionHall("Auction System",500, 500, JFrame.EXIT_ON_CLOSE) ;
     }
 
-
-//    public static void productPage(String imgPath,String productName,String price){
-//        Product product=new Product(productName,500,500,JFrame.EXIT_ON_CLOSE);
-//        product.setProductImage(imgPath);
-//        product.setProductName(productName);
-//        product.setCurrentProductPrice(price);
-//    }
-
-    public static void addProudct(){
+    public static void addProductWindow(){
         BidView bidView =new BidView("Auction System",500,500,JFrame.EXIT_ON_CLOSE);
     }
-    public static void login(){
+
+    public static void loginWindow(){
         Login login=new Login("Auction System",310, 150, JFrame.EXIT_ON_CLOSE);
     }
-    public static  void register(){
-        Register register =new Register("Auction System",310, 150, JFrame.DISPOSE_ON_CLOSE);
 
+    public static  void registerWindow(){
+        Register register =new Register("Auction System",310, 150, JFrame.DISPOSE_ON_CLOSE);
     }
 }

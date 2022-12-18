@@ -1,7 +1,6 @@
 package view;
 
 import ClientSide.ServerConnection;
-import Database.Database;
 import Helper.Countdown;
 import Helper.Img;
 import Models.Bid;
@@ -11,24 +10,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Product extends Window {
     private JLabel productImage;
-    private JLabel proudctName;
+    private JLabel productName;
     private JLabel currentProductPrice;
     private JTextField newBid;
-    private JTable table1;
     private JPanel root;
-    private JButton newBidButton;
+    private JButton newBidBtn;
     public JLabel countdown;
-    private JButton back;
-    private JLabel winner;
+    private JButton backBtn;
     private JTextArea description;
-    private Timer timer;
+
+    private String winnerEmail;
+
     Product(Bid bid, int width, int height, int defaultCloseOperation) {
         super(bid.getTitle(), width, height, defaultCloseOperation);
         // TODO: make function get Bid with id
@@ -36,11 +34,9 @@ public class Product extends Window {
         setProductName(bid.getTitle());
         setCurrentProductPrice(String.valueOf(bid.getPrice()));
         setDescription(bid.getDescription());
-        // TODO: give the correct winner fullname
-        setWinner(Login.CurrentUserEmail);
 
         initializeGui();
-        Date creationDate= null;
+        Date creationDate = null;
 
         try {
             creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0").parse(bid.getCreation_date());
@@ -49,70 +45,82 @@ public class Product extends Window {
             long endTime = start + bid.getDuration();
             Countdown count=new Countdown(countdown,start, endTime);
             count.startCountdown();
+
+            if (count.getTimeLeft() <= 0){
+                newBidBtn.setEnabled(false);
+                newBid.setEnabled(false);
+            }
         } catch (ParseException ignored) {
         }
 
-        back.addActionListener(new ActionListener() {
+        backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Route.auctionHall();
+                Route.auctionHallWindow();
                 dispose();
             }
         });
 
-        newBidButton.addActionListener(new ActionListener() {
+        newBidBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // updatePrice
-
                 int id = bid.getId();
-                int price;
-                try{
-                    price = Integer.parseInt(newBid.getText());
-                    // winner is the current user email
-                    String winner = Login.CurrentUserEmail;
-                    Message message4 = new Message("updatePrice", "" + id + "," + price + "," + winner);
-                    message4 = (Message) ServerConnection.getInstance().sendMessage(message4);
-                    if (message4.getFunctionName().equals("updatePrice")){
-                        boolean result4 = (boolean) message4.getObject();
-                        if (result4){
-                            // successfully updated price
-                            System.out.println("Client: " + result4);
-                        }
-                    }
+                int price = 999999999;
 
-                }catch (Exception exception){
+                try{
+                    price = getPrice();
+
+                    // winner is the current user email
+                    setWinnerAsCurrentUser();
+
+                    if(!updatePrice(id, price, winnerEmail)){
+                        bidError();
+                    }
+                } catch (NumberFormatException exception){
                     bidError();
                 }
             }
         });
     }
 
+    private void setWinnerAsCurrentUser(){
+        winnerEmail = Login.CurrentUserEmail;
+    }
 
+    private int getPrice(){
+        return Integer.parseInt(newBid.getText());
+    }
+
+    private boolean updatePrice(int id, int price, String winnerEmail){
+        try{
+            Message message = new Message("updatePrice", "" + id + "," + price + "," + winnerEmail);
+            message = (Message) ServerConnection.getInstance().sendMessage(message);
+            if (message.getFunctionName().equals("updatePrice")){
+                return (boolean) message.getObject();
+            }
+        }catch (Exception ignored){
+        }
+
+        return false;
+    }
 
     private void initializeGui(){
-
-
-
         productImage.setText("");
         productImage.setSize(new Dimension(200,200));
-
-        winner.setSize(200,200);
 
         countdown.setSize(new Dimension(200,200));
         countdown.setFont(new Font(countdown.getFont().getFontName(),Font.BOLD,30));
 
-        proudctName.setFont(new Font(proudctName.getFont().getFontName(),Font.BOLD,25));
+        productName.setFont(new Font(productName.getFont().getFontName(),Font.BOLD,25));
 
         currentProductPrice.setFont(new Font(currentProductPrice.getFont().getFontName(),Font.BOLD,15));
-        winner.setForeground(Color.blue);
         ContentPanel.add(root);
         StyleComponents(root);
         this.setVisible(true);
     }
 
     public void setProductName(String proudctName) {
-        this.proudctName.setText( proudctName);
+        this.productName.setText( proudctName);
     }
     public void setCurrentProductPrice(String price){
         this.currentProductPrice.setText(price);
@@ -122,24 +130,13 @@ public class Product extends Window {
         productImage.setSize(new Dimension(200,200));
         productImage.setIcon(Img.createImageIcon( Img.readImage(imgPath,new Dimension(productImage.getWidth(),productImage.getHeight()))));
         System.out.println("imgPath: " + imgPath);
-
-
     }
 
-    public void setWinner(String winner){
-        this.winner.setText("winner is "+winner);
-    }
-//    public void setCountdown(String text){
-//        this.countdown.setText(text);
-//    }
     public void setDescription(String text){
         this.description.setText(text);
     }
 
     private void bidError(){
-
         JOptionPane.showMessageDialog(null,"Bid Error");
-
     }
-
 }

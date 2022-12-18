@@ -13,59 +13,61 @@ public class Register extends  Window{
     private JPanel panel1;
     private JPasswordField password;
     private JTextField email;
-    private JButton signUpButton;
+    private JButton signUpBtn;
 
     Register(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
 
         initializeGui();
 
-
-        signUpButton.addActionListener(new ActionListener() {
+        signUpBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // createNewUser
                 if (!checkInputsEmpty()) {
-
-
-                    User user1 = new User(getEmail(), getFullname(), getPassword());
-                    Message message2 = new Message("createNewUser", user1);
-                    try {
-                        message2 = (Message) ServerConnection.getInstance().sendMessage(message2);
-                    } catch (Exception ignored) {
-                    }
-                    if (message2.getFunctionName().equals("createNewUser")) {
-                        boolean isRegistered = (boolean) message2.getObject();
-                        System.out.println("Client: " + isRegistered);
-
-                        if (isRegistered) {
-                            dispose();
-//                        Login login = new Login("Auction System",310, 150, JFrame.DISPOSE_ON_CLOSE);
-                        } else {
-                            registerError();
+                    User newUser = createUser(getEmail(), getFullname(), getPassword());
+                    if (registerNewUser(newUser)) {
+                        dispose();
+                        Route.loginWindow();
+                    } else { // Error occurred during account creation
+                        if(checkUserExists()){
+                            usedEmailError();
+                        } else{
+                            generalError();
                         }
                     }
-
-                }
-                else{
+                } else{
                     emptyFieldsError();
                 }
             }
-
         });
-
     }
 
     void initializeGui(){
         ContentPanel.add(panel1);
         StyleComponents(panel1);
         this.setVisible(true);
-
     }
+
     private boolean checkInputsEmpty(){
-        return (getEmail().isBlank()||getFullname().isBlank()||getPassword().isBlank());
+        return (getEmail().isBlank() || getFullname().isBlank() || getPassword().isBlank());
+    }
 
+    private User createUser(String email, String fullname, String password){
+        return new User(email, fullname, password);
+    }
 
+    private boolean registerNewUser(User user){
+        Message message = new Message("createNewUser", user);
+        try {
+            message = (Message) ServerConnection.getInstance().sendMessage(message);
+        } catch (Exception ignored) {
+        }
+        if (message.getFunctionName().equals("createNewUser")) {
+            return (boolean) message.getObject();
+        }
+
+        return false;
     }
 
     private String getPassword() {
@@ -79,10 +81,7 @@ public class Register extends  Window{
         return fullname.getText();
     }
 
-    private void registerError(){
-
-        // check isUserExist
-
+    private boolean checkUserExists(){
         Message message = new Message("isUserExist",getEmail());
 
         try{
@@ -90,19 +89,18 @@ public class Register extends  Window{
         }catch (Exception ignored){
         }
 
-        boolean result = (boolean) message.getObject();
-
-        if (result){
-            JOptionPane.showMessageDialog(null,"Error creating account, Email is already used");
-        } else{ // email is not used, but an error still occurred
-            JOptionPane.showMessageDialog(null,"Error creating account");
-        }
-
-
+        return (boolean) message.getObject();
     }
+
     private void emptyFieldsError(){
         JOptionPane.showMessageDialog(null,"fill all fields ");
-
     }
 
+    private void usedEmailError(){
+        JOptionPane.showMessageDialog(null,"Error creating account, Email is already used");
+    }
+
+    private void generalError(){
+        JOptionPane.showMessageDialog(null,"Error creating account");
+    }
 }

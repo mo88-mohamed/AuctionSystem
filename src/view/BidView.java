@@ -21,9 +21,9 @@ public class BidView extends Window {
     private JTextField productName;
     private JTextField price;
     private JComboBox hours;
-    private JButton submit;
+    private JButton submitBtn;
     private JTextArea description;
-    private JButton back;
+    private JButton backBtn;
     private String imagePath;
     JFileChooser chooser;
 
@@ -43,7 +43,7 @@ public class BidView extends Window {
             }
         });
 
-        submit.addActionListener(new ActionListener() {
+        submitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // On creating bid button click
@@ -70,16 +70,16 @@ public class BidView extends Window {
                 }
 
                 if (message3.getFunctionName().equals("createBid")){
-                    Route.auctionHall();
+                    Route.auctionHallWindow();
                 }
 
                 dispose();
             }
         });
-        back.addActionListener(new ActionListener() {
+        backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Route.auctionHall();
+                Route.auctionHallWindow();
                 dispose();
             }
         });
