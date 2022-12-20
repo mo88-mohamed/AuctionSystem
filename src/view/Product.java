@@ -27,7 +27,7 @@ public class Product extends Window {
 
     private String winnerEmail;
     public static Product in;
-
+    Countdown count;
     private  Bid bid;
     Product(Bid bid, int width, int height, int defaultCloseOperation) {
         super(bid.getTitle(), width, height, defaultCloseOperation);
@@ -44,7 +44,7 @@ public class Product extends Window {
 
             long start=creationDate.getTime();
             long endTime = start + (bid.getDuration()*60*60*1000);
-            Countdown count=new Countdown(countdown,start, endTime);
+             count=new Countdown(countdown,start, endTime);
             count.startCountdown();
 
             if (count.getTimeLeft() <= 0){
@@ -68,17 +68,22 @@ public class Product extends Window {
                 int id = bid.getId();
                 int price = 999999999;
 
-                try{
-                    price = getPrice();
+                if (count.getTimeLeft() >= 0) {
+                    timeError();
+                } else {
 
-                    // winner is the current user email
-                    setWinnerAsCurrentUser();
+                    try {
+                        price = getPrice();
 
-                    if(!updatePrice(id, price, winnerEmail)){
+                        // winner is the current user email
+                        setWinnerAsCurrentUser();
+
+                        if (!updatePrice(id, price, winnerEmail)) {
+                            bidError();
+                        }
+                    } catch (NumberFormatException exception) {
                         bidError();
                     }
-                } catch (NumberFormatException exception){
-                    bidError();
                 }
             }
         });
@@ -152,5 +157,8 @@ public class Product extends Window {
 
     private void bidError(){
         JOptionPane.showMessageDialog(null,"Bid Error");
+    }
+    private void timeError(){
+        JOptionPane.showMessageDialog(null,"time ended");
     }
 }
