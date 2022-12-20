@@ -52,16 +52,19 @@ public class Main {
 
                             bidsList = (List<Bid>) message.getObject();
 
+                            System.out.println("Redraw");
                             AuctionHall.Instance.redrawCards();
-                            for (Bid bid1 :bidsList) {
-                                if(bid1.getId()==Product.in.getCurrentBid().getId()){
-                                    System.out.println("done");
-                                    Product.in.updateGui(bid1);
-                                    break;
+                            try {
+                                for (Bid bid1 :bidsList) {
+                                    if(bid1.getId()==Product.in.getCurrentBid().getId()){
+                                        System.out.println("done");
+                                        Product.in.updateGui(bid1);
+                                        break;
+                                    }
                                 }
+                            } catch (Exception ignore) {
+
                             }
-
-
                         }
                     }
                 }

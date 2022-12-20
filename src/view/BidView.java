@@ -1,5 +1,6 @@
 package view;
 
+import ClientSide.Main;
 import ClientSide.ServerConnection;
 import Helper.Img;
 import Models.Bid;
@@ -12,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -77,6 +79,7 @@ public class BidView extends Window {
                 }
 
                 if (message3.getFunctionName().equals("createBid")){
+                    Main.bidsList.add(bid);
                     Route.auctionHallWindow();
                 }
 

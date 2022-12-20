@@ -24,7 +24,7 @@ public class Countdown {
             public void actionPerformed(ActionEvent e)
             {
                 timeLeft -=100;
-                SimpleDateFormat df=new SimpleDateFormat("HH:mm:ss");
+                SimpleDateFormat df=new SimpleDateFormat("dd HH:mm:ss");
                 df.setTimeZone(TimeZone.getTimeZone("GMT"));
                 countdown.setText(df.format(timeLeft));
 //                System.out.println(df.format(timeLeft));
@@ -44,7 +44,7 @@ public class Countdown {
         this.timeLeft = endTime - System.currentTimeMillis();
     }
 
-    public long getTimeLeft(){
+    public long getTimeLeft() {
         return this.timeLeft;
     }
 

@@ -44,7 +44,7 @@ public class Product extends Window {
 
             long start=creationDate.getTime();
             long endTime = start + (bid.getDuration()*60*60*1000);
-             count=new Countdown(countdown,start, endTime);
+            count=new Countdown(countdown,start, endTime);
             count.startCountdown();
 
             if (count.getTimeLeft() <= 0){
@@ -68,7 +68,7 @@ public class Product extends Window {
                 int id = bid.getId();
                 int price = 999999999;
 
-                if (count.getTimeLeft() >= 0) {
+                if (count.getTimeLeft() <= 0) {
                     timeError();
                 } else {
 
@@ -80,7 +80,8 @@ public class Product extends Window {
 
                         if (!updatePrice(id, price, winnerEmail)) {
                             bidError();
-                        }
+                        } else
+                            setCurrentProductPrice(""+price);
                     } catch (NumberFormatException exception) {
                         bidError();
                     }

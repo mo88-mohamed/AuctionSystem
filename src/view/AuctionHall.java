@@ -95,6 +95,8 @@ public class AuctionHall extends Window {
                 System.out.println(bid1.getId());
                 ind++;
             }
+            cards.updateUI();
+            cards.setBackground( new Color(0x2C2F33));
         }
     }
 }
