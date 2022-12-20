@@ -20,10 +20,11 @@ public class BidView extends Window {
     private JLabel image;
     private JTextField productName;
     private JTextField price;
-    private JComboBox hours;
+//    private JComboBox hours;
     private JButton submitBtn;
     private JTextArea description;
     private JButton backBtn;
+    private JTextField hours;
     private String imagePath;
     JFileChooser chooser;
 
@@ -50,7 +51,7 @@ public class BidView extends Window {
 
                 DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
                 String currentDateTime = dateFormat.format(LocalDateTime.now());
-
+                int time;
                 if (!checkValidProductName()){
                     emptyProductNameError();
                     return;
@@ -60,8 +61,14 @@ public class BidView extends Window {
                     priceFormatError();
                     return;
                 }
-
-                Bid bid = new Bid(getPrice(),getAuctionTime(),getProductName(),getDescription(),getProductImage(),currentDateTime,Login.CurrentUserEmail);
+                try{
+                    time=getAuctionTime();
+                }
+                catch (Exception exception){
+                    JOptionPane.showMessageDialog(null,"duration must be Integer number");
+                    return;
+                }
+                Bid bid = new Bid(getPrice(),time,getProductName(),getDescription(),getProductImage(),currentDateTime,Login.CurrentUserEmail);
                 Message message3 = new Message("createBid", bid);
 
                 try{
@@ -115,7 +122,8 @@ public class BidView extends Window {
         return productName.getText();
     }
     public int getAuctionTime(){
-        return Integer.parseInt(hours.getSelectedItem().toString());
+
+        return Integer.parseInt(hours.getText());
     }
     public String getDescription(){
         return description.getText();
