@@ -26,15 +26,16 @@ public class Product extends Window {
     private JTextArea description;
 
     private String winnerEmail;
+    public static Product in;
 
+    private  Bid bid;
     Product(Bid bid, int width, int height, int defaultCloseOperation) {
         super(bid.getTitle(), width, height, defaultCloseOperation);
+        this.bid=bid;
+        in=this;
         // TODO: make function get Bid with id
-        setProductImage(bid.getImage_path());
-        setProductName(bid.getTitle());
-        setCurrentProductPrice(String.valueOf(bid.getPrice()));
-        setDescription(bid.getDescription());
 
+        initData();
         initializeGui();
         Date creationDate = null;
 
@@ -42,7 +43,7 @@ public class Product extends Window {
             creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.0").parse(bid.getCreation_date());
 
             long start=creationDate.getTime();
-            long endTime = start + bid.getDuration();
+            long endTime = start + (bid.getDuration()*60*60*1000);
             Countdown count=new Countdown(countdown,start, endTime);
             count.startCountdown();
 
@@ -83,6 +84,19 @@ public class Product extends Window {
         });
     }
 
+    private void initData(){
+        setProductImage(bid.getImage_path());
+        setProductName(bid.getTitle());
+        setCurrentProductPrice(String.valueOf(bid.getPrice()));
+        setDescription(bid.getDescription());
+    }
+    public void updateGui(Bid bid){
+        this.bid=bid;
+        initData();
+    }
+    public Bid getCurrentBid(){
+        return bid;
+    }
     private void setWinnerAsCurrentUser(){
         winnerEmail = Login.CurrentUserEmail;
     }

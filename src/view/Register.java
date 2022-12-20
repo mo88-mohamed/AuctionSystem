@@ -28,7 +28,7 @@ public class Register extends  Window{
                     User newUser = createUser(getEmail(), getFullname(), getPassword());
                     if (registerNewUser(newUser)) {
                         dispose();
-                        Route.loginWindow();
+//                        Route.loginWindow();
                     } else { // Error occurred during account creation
                         if(checkUserExists()){
                             usedEmailError();

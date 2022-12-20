@@ -3,6 +3,7 @@ package ClientSide;
 import Models.Bid;
 import Models.Message;
 import view.AuctionHall;
+import view.Product;
 import view.Route;
 
 import java.io.IOException;
@@ -52,6 +53,14 @@ public class Main {
                             bidsList = (List<Bid>) message.getObject();
 
                             AuctionHall.Instance.redrawCards();
+                            for (Bid bid1 :bidsList) {
+                                if(bid1.getId()==Product.in.getCurrentBid().getId()){
+                                    System.out.println("done");
+                                    Product.in.updateGui(bid1);
+                                    break;
+                                }
+                            }
+
 
                         }
                     }

@@ -88,10 +88,12 @@ public class AuctionHall extends Window {
 
     private void addCards(){
         if (Main.bidsList != null) {
+            int ind=0;
             for (Bid bid1 : Main.bidsList) {
-                Card card = new Card(bid1, this);
+                Card card = new Card(bid1, ind,this);
                 cards.add(card);
                 System.out.println(bid1.getId());
+                ind++;
             }
         }
     }

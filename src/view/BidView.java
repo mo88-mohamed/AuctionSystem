@@ -115,7 +115,7 @@ public class BidView extends Window {
         return productName.getText();
     }
     public int getAuctionTime(){
-        return Integer.parseInt(hours.getSelectedItem().toString())*60*60*1000;
+        return Integer.parseInt(hours.getSelectedItem().toString());
     }
     public String getDescription(){
         return description.getText();

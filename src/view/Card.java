@@ -15,7 +15,7 @@ public class Card extends JPanel {
     private JLabel img;
     private JLabel itemName;
 
-    Card(Bid bid, Window parent){
+    Card(Bid bid,int id, Window parent){
         this.parent=parent;
 
         initializeGui();
