@@ -1,5 +1,7 @@
 package view;
 
+import ClientSide.Main;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -18,6 +20,7 @@ public class Window extends JFrame implements ActionListener, MouseListener {
     private Color veryDark = new Color(0x23272A);
     private int width ,height;
     private String windowTitle;
+    private int defaultCloseOperation;
 
     Window(String windowTitle, int width, int height, int defaultCloseOperation){
         initWindow(windowTitle, width, height, defaultCloseOperation);
@@ -38,6 +41,7 @@ public class Window extends JFrame implements ActionListener, MouseListener {
         this.windowTitle=windowTitle;
         this.width=width;
         this.height=height;
+        this.defaultCloseOperation = defaultCloseOperation;
 
         setSize(width + 10, height + 37);
         centerWindowOnScreen();
@@ -102,8 +106,11 @@ public class Window extends JFrame implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == closeWindow){
             dispose();
-            System.out.println("System Exit!");
-            System.exit(0);
+            if (defaultCloseOperation == 3){ // EXIT_ON_CLOSE
+                Main.onApplicationExit();
+                System.out.println("System Exit!");
+//                System.exit(0);
+            }
         }
         else if(e.getSource() == minimizeWindow){
             this.setState(Frame.ICONIFIED);

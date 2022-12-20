@@ -12,11 +12,12 @@ import java.util.List;
 
 public class Main {
     public static List<Bid> bidsList = new ArrayList<>();
-    public static boolean isListUpdated;
+    public static boolean isListUpdated, isServerOpen;
     public static void main(String[] args) throws SQLException, InterruptedException {
         try {
             // this is must be in a first line in your main program
             ServerConnection.getInstance().startSession();
+            isServerOpen = true;
 
             bidsList = ServerConnection.getInstance().getBidsList();
 
@@ -26,29 +27,29 @@ public class Main {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Message message6;
+                    Message message;
                     List<Bid> resultList;
-                    while (true) {
+                    while (isServerOpen) {
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
-                        message6 = new Message("getAllBidsLive");
+                        message = new Message("getAllBidsLive");
                         try {
-                            message6 = (Message) ServerConnection.getInstance().sendMessage(message6);
+                            message = (Message) ServerConnection.getInstance().sendMessage(message);
                         } catch (IOException | ClassNotFoundException | InterruptedException e) {
-                            throw new RuntimeException(e);
+                            Thread.interrupted();
                         }
 
 
-                        isListUpdated = Boolean.parseBoolean(message6.getParams());
+                        isListUpdated = Boolean.parseBoolean(message.getParams());
                         if (isListUpdated) {
                             isListUpdated = false;
 
                             System.out.println("There is an update");
 
-                            bidsList = (List<Bid>) message6.getObject();
+                            bidsList = (List<Bid>) message.getObject();
 
                             AuctionHall.Instance.redrawCards();
 
@@ -56,17 +57,27 @@ public class Main {
                     }
                 }
             }).start();
-            // close function must be called when user press on red x to close the gui and the gui mustn't be closed until this function return true
-//            Message message5 = new Message("closeConnection");
-//            message5 = (Message) ServerConnection.getInstance().sendMessage(message5);
-//            boolean result5 = (boolean) message5.getObject();
-//            if (result5) {
-//                System.out.println("Client closed: " + result5);
-//                System.exit(0);
-//            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public static void onApplicationExit(){
+        //close function must be called when user press on red x to close the gui and the gui mustn't be closed until this function return true
+        Message message = new Message("closeConnection");
+        try{
+            message = (Message) ServerConnection.getInstance().sendMessage(message);
+
+            boolean result = (boolean) message.getObject();
+
+            if (result) {
+                isServerOpen = false;
+                System.out.println("Client closed: " + result);
+                System.exit(0);
+            }
+        } catch (Exception ignored){
+        }
+    }
+
 }
