@@ -27,18 +27,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9358cc5-2dcf-488f-9418-ebf6d7e2dc6e" name="Changes" comment="All clients synced successfully final version">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ClientSide/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientSide/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Helper/Countdown.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Helper/Countdown.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/AuctionHall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/AuctionHall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/BidView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/BidView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/hp.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/ps.jpg" beforeDir="false" />
-    </list>
+    <list default="true" id="c9358cc5-2dcf-488f-9418-ebf6d7e2dc6e" name="Changes" comment="Final Version All bugs was fixed" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,17 +63,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "node.js.selected.package.tslint": "(autodetect)"
-  }
-}]]></component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main2">
+  <component name="RunManager" selected="Application.Main1">
     <configuration name="Main1" type="Application" factoryName="Application" singleton="false">
       <option name="MAIN_CLASS_NAME" value="ClientSide.Main" />
       <module name="Auction System" />
@@ -148,13 +132,13 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.ServerHandler" />
       <item itemvalue="Application.Main1" />
-      <item itemvalue="Application.Main5" />
-      <item itemvalue="Application.Main6" />
       <item itemvalue="Application.Main2" />
       <item itemvalue="Application.Main3" />
       <item itemvalue="Application.Main4" />
+      <item itemvalue="Application.Main5" />
+      <item itemvalue="Application.Main6" />
+      <item itemvalue="Application.ServerHandler" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -175,6 +159,7 @@
       <workItem from="1670708831954" duration="17896000" />
       <workItem from="1670765452480" duration="7739000" />
       <workItem from="1671252065319" duration="1065000" />
+      <workItem from="1671575801201" duration="2000" />
     </task>
     <task id="LOCAL-00001" summary="beta version">
       <created>1670471664657</created>
@@ -211,7 +196,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670773232957</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Final Version All bugs was fixed">
+      <created>1671575188825</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1671575188825</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,6 +219,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="beta version" />
@@ -234,7 +227,8 @@
     <MESSAGE value="All working" />
     <MESSAGE value="All clients synced successfully" />
     <MESSAGE value="All clients synced successfully final version" />
-    <option name="LAST_COMMIT_MESSAGE" value="All clients synced successfully final version" />
+    <MESSAGE value="Final Version All bugs was fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final Version All bugs was fixed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -247,7 +241,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Auction_System$Main.ic" NAME="Main Coverage Results" MODIFIED="1670456604492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/AuctionSystem$Main1.ic" NAME="Main1 Coverage Results" MODIFIED="1671279307872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/Auction_System$Main.ic" NAME="Main Coverage Results" MODIFIED="1670456604492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

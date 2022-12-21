@@ -24,9 +24,11 @@ public class Countdown {
             public void actionPerformed(ActionEvent e)
             {
                 timeLeft -=100;
-                SimpleDateFormat df=new SimpleDateFormat("dd HH:mm:ss");
+                SimpleDateFormat df=new SimpleDateFormat("HH:mm:ss");
+                long day= (long) (timeLeft/1000/60/60)/24;
                 df.setTimeZone(TimeZone.getTimeZone("GMT"));
-                countdown.setText(df.format(timeLeft));
+//                System.out.println("time left= "+timeLeft +"  day="+day);
+                countdown.setText(day+" days "+df.format(timeLeft));
 //                System.out.println(df.format(timeLeft));
                 if(timeLeft <=0)
                 {
@@ -44,7 +46,7 @@ public class Countdown {
         this.timeLeft = endTime - System.currentTimeMillis();
     }
 
-    public long getTimeLeft() {
+    public long getTimeLeft(){
         return this.timeLeft;
     }
 

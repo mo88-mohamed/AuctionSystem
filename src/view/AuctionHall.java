@@ -19,10 +19,15 @@ public class AuctionHall extends Window {
     private JButton addProductBtn;
     private JButton logOutBtn;
 
+    int width, height;
+
     AuctionHall(String windowTitle, int width, int height, int defaultCloseOperation) {
         super(windowTitle, width, height, defaultCloseOperation);
 
         Instance = this;
+
+        this.width = width;
+        this.height = height;
 
         addCards();
         initializeGui();
@@ -61,7 +66,9 @@ public class AuctionHall extends Window {
         addProductBtn.setVerticalAlignment(SwingConstants.TOP);
         addProductBtn.setMaximumSize(new Dimension(20,20));
 
-        cards.setLayout(new GridLayout(0, 3, 10, 10));
+        cards.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
+
+        resetCardsPreferredSize();
 
         JScrollPane scrollPane = new JScrollPane(cards);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -74,11 +81,20 @@ public class AuctionHall extends Window {
         this.setVisible(true);
     }
 
-
+    private void resetCardsPreferredSize(){
+        int columnHeight = 160;
+        if(Main.bidsList.size() > 9){
+            int numRows = (int)Math.ceil(Main.bidsList.size()/3.0);
+            cards.setPreferredSize(new Dimension(width - 27, columnHeight * numRows - (numRows * 4)));
+        } else{
+            cards.setPreferredSize(new Dimension(width - 27, height - 37));
+        }
+    }
 
     public void redrawCards() {
         clearCards();
         addCards();
+        resetCardsPreferredSize();
     }
 
     private void clearCards(){
@@ -88,12 +104,10 @@ public class AuctionHall extends Window {
 
     private void addCards(){
         if (Main.bidsList != null) {
-            int ind=0;
             for (Bid bid1 : Main.bidsList) {
-                Card card = new Card(bid1, ind,this);
+                Card card = new Card(bid1,this);
                 cards.add(card);
                 System.out.println(bid1.getId());
-                ind++;
             }
             cards.updateUI();
             cards.setBackground( new Color(0x2C2F33));
